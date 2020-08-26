@@ -87,14 +87,23 @@ fn glsl_bindings() {
         }
     );
 
-    // assert_eq!(
-    //     sets[&4][&0],
-    //     DescriptorInfo {
-    //         name: "g_bindlessrwimage2d".to_string(),
-    //         ty: DescriptorType::STORAGE_IMAGE,
-    //         is_bindless: true
-    //     }
-    // );
+    assert_eq!(
+        sets[&4][&0],
+        DescriptorInfo {
+            name: "g_bindlessrwimage2d".to_string(),
+            ty: DescriptorType::STORAGE_IMAGE,
+            is_bindless: true
+        }
+    );
+
+    assert_eq!(
+        sets[&4][&1],
+        DescriptorInfo {
+            name: "g_bindlesstexture2d".to_string(),
+            ty: DescriptorType::SAMPLED_IMAGE,
+            is_bindless: true
+        }
+    );
 
     assert_eq!(
         sets[&5][&0],

@@ -38,6 +38,9 @@ layout(set = 2, binding = 2, rgba32f) uniform image2D g_rwimage2d;
 
 layout(set = 3, binding = 0) uniform texture2D g_texture2d;
 
+layout(set = 4, binding = 0, rgba32f) uniform image2D g_bindlessrwimage2d[];
+layout(set = 4, binding = 1) uniform texture2D g_bindlesstexture2d[];
+
 layout(set = 5, binding = 0) uniform sampler2D g_samplerimage2d;
 
 layout(set = 6, binding = 0, rgba32f) uniform imageBuffer g_imagebuffer;
