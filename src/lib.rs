@@ -179,6 +179,31 @@ impl Reflection {
                 assert_eq!(storage_class, ptr_storage_class);
                 return self.get_descriptor_type_for_var(element_type_id, storage_class);
             }
+            spirv::Op::TypeSampledImage => {
+                let element_type_id = get_operand_at!(type_instruction, Operand::IdRef, 0)?;
+
+                let image_instruction =
+                    Self::find_assignment_for(&self.0.types_global_values, element_type_id)?;
+
+                let descriptor = self.get_descriptor_type(image_instruction, storage_class)?;
+
+                let dim = get_operand_at!(image_instruction, Operand::Dim, 1)?;
+                assert!(dim != spirv::Dim::DimSubpassData);
+
+                return Ok(if dim == spirv::Dim::DimBuffer {
+                    if descriptor.ty != DescriptorType::UNIFORM_TEXEL_BUFFER
+                        && descriptor.ty != DescriptorType::STORAGE_TEXEL_BUFFER
+                    {
+                        todo!("Unexpected sampled image, is this possible?")
+                    }
+                    descriptor
+                } else {
+                    DescriptorInfo {
+                        ty: DescriptorType::COMBINED_IMAGE_SAMPLER,
+                        ..descriptor
+                    }
+                });
+            }
             _ => {}
         }
 
@@ -216,19 +241,6 @@ impl Reflection {
                         sampled,
                     ));
                 }
-            }
-            spirv::Op::TypeSampledImage => {
-                todo!("{:?} Not implemented; untested", type_instruction.class);
-                // Note that `dim`, `sampled` and `storage` are parsed from TypeImage
-                // if dim == SpvDimBuffer {
-                //     if sampled {
-                //         DescriptorType::UNIFORM_TEXEL_BUFFER
-                //     } else if storage {
-                //         DescriptorType::STORAGE_TEXEL_BUFFER
-                //     }
-                // } else {
-                //     DescriptorType::COMBINED_IMAGE_SAMPLER
-                // }
             }
             spirv::Op::TypeStruct => {
                 let mut is_uniform_buffer = false;
