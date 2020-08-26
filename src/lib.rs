@@ -172,6 +172,14 @@ impl Reflection {
                     ..self.get_descriptor_type_for_var(element_type_id, storage_class)?
                 });
             }
+            spirv::Op::TypeArray => {
+                let element_type_id = get_operand_at!(type_instruction, Operand::IdRef, 0)?;
+                let _array_length_id = get_operand_at!(type_instruction, Operand::IdRef, 1)?;
+                return Ok(DescriptorInfo {
+                    is_bindless: true,
+                    ..self.get_descriptor_type_for_var(element_type_id, storage_class)?
+                });
+            }
             spirv::Op::TypePointer => {
                 let ptr_storage_class =
                     get_operand_at!(type_instruction, Operand::StorageClass, 0)?;
