@@ -330,7 +330,7 @@ impl Reflection {
                 }
             }
             spirv::Op::TypeSampledImage => {
-                todo!("{:?} Not implemented; untested", type_instruction.class);
+                //todo!("{:?} Not implemented; untested", type_instruction.class);
                 // Note that `dim`, `sampled` and `storage` are parsed from TypeImage
                 // if dim == SpvDimBuffer {
                 //     if sampled {
@@ -341,6 +341,7 @@ impl Reflection {
                 // } else {
                 //     DescriptorType::COMBINED_IMAGE_SAMPLER
                 // }
+                DescriptorType::COMBINED_IMAGE_SAMPLER
             }
             spirv::Op::TypeStruct => {
                 let mut is_uniform_buffer = false;
